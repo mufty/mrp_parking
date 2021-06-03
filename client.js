@@ -39,7 +39,7 @@ let buildMenu = (blip) => {
             submenu.push({
                 id: 'PARK_VEHICLE',
                 text: "Park current vehicle",
-                action: 'https://mrp_valet/park'
+                action: 'https://mrp_parking/park'
             });
             for (let car of cars) {
                 let displayName = GetDisplayNameFromVehicleModel(car.model);
@@ -47,7 +47,7 @@ let buildMenu = (blip) => {
                 submenu.push({
                     id: car.plate,
                     text: displayName + " [" + car.plate + "]",
-                    action: 'https://mrp_valet/takeOut'
+                    action: 'https://mrp_parking/takeOut'
                 });
             }
         }
@@ -55,7 +55,7 @@ let buildMenu = (blip) => {
             id: 'park',
             text: config.locale.park,
             submenu: submenu,
-            action: 'https://mrp_valet/park'
+            action: 'https://mrp_parking/park'
         });
     });
 };
@@ -73,8 +73,8 @@ setInterval(() => {
 
         let [blipX, blipY, blipZ] = GetBlipCoords(info.blip);
         let distanceFromBlip = Vdist(pX, pY, pZ, blipX, blipY, blipZ);
-        let valetCfg = config["valet_" + info.id];
-        valetCfg.id = "valet_" + info.id;
+        let valetCfg = config[info.id];
+        valetCfg.id = info.id;
         RequestModel(valetCfg.model);
         if (valetCfg.area >= distanceFromBlip) {
             foundBlip = valetCfg;
@@ -145,17 +145,22 @@ on('__cfx_nui:park', (data, cb) => {
     if (currentlyAtBlip == null)
         return;
 
+    console.log("parking...");
     let exec = async () => {
         let ped = PlayerPedId();
         let nearestVehicle = await getNearestVehicle(ped, config.nearestVehicleArea);
+        console.log(nearestVehicle);
         if (!nearestVehicle || !nearestVehicle.vehicle)
             return;
+
+        console.log(`parking [${GetVehicleNumberPlateText(nearestVehicle.vehicle).trim()}]`);
 
         let vehicleProperties = MRP_CLIENT.getVehicleProperties(nearestVehicle.vehicle);
         let char = MRP_CLIENT.GetPlayerData();
         vehicleProperties.owner = char._id;
         vehicleProperties.location = currentlyAtBlip.id;
         let source = GetPlayerServerId(PlayerId());
+        console.log("saving...");
         emitNet('mrp:vehicle:save', source, vehicleProperties);
         DeleteEntity(nearestVehicle.vehicle);
     };
