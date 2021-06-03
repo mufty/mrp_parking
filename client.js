@@ -119,7 +119,7 @@ on('mrp:parking:takeOut', (data) => {
 
         let exec = async () => {
             RequestModel(vehicle.model);
-            while (currentlyAtBlip && !HasModelLoaded(vehicle.model) && !isTimedout(actionStarted)) {
+            while (currentlyAtBlip && !HasModelLoaded(vehicle.model)) {
                 await utils.sleep(100);
             }
 

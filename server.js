@@ -6,7 +6,24 @@ while (MRP_SERVER == null) {
     print('Waiting for shared object....');
 }
 
-onNet('mrp:parking:getCarsAtLocation', (source, locationId, ownerId) => {
+on('onResourceStart', (resource) => {
+    let resName = GetCurrentResourceName();
+    if (resName != resource)
+        return;
+
+    //update all OUT locations to impound
+    MRP_SERVER.update('vehicle', {
+        location: "impound_1"
+    }, {
+        location: "OUT"
+    }, {
+        multi: true
+    }, () => {
+        exports["mrp_core"].log('Vehicles impounded!');
+    });
+});
+
+onNet('mrp:parking:getCarsAtLocation', (source, locationId, ownerId, uuid) => {
     let query = {
         location: locationId,
         owner: ownerId
@@ -25,11 +42,11 @@ onNet('mrp:parking:getCarsAtLocation', (source, locationId, ownerId) => {
     };
 
     MRP_SERVER.find('vehicle', query, options, (result) => {
-        emitNet('mrp:parking:getCarsAtLocation:response', source, result);
+        emitNet('mrp:parking:getCarsAtLocation:response', source, result, uuid);
     });
 });
 
-onNet('mrp:parking:takeoutVehicle', (source, plate) => {
+onNet('mrp:parking:takeoutVehicle', (source, plate, uuid) => {
     plate = plate.trim();
     let query = {
         plate: plate
@@ -38,11 +55,11 @@ onNet('mrp:parking:takeoutVehicle', (source, plate) => {
     MRP_SERVER.read('vehicle', query, (vehicle) => {
         MRP_SERVER.update('vehicle', {
             location: "OUT"
-        }, () => {
-            exports["mrp_core"].log('Vehicle updated!');
         }, {
             plate: plate
+        }, () => {
+            exports["mrp_core"].log('Vehicle updated!');
         });
-        emitNet('mrp:parking:takeoutVehicle:response', source, vehicle);
+        emitNet('mrp:parking:takeoutVehicle:response', source, vehicle, uuid);
     });
 });
