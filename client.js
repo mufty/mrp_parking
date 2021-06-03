@@ -149,7 +149,6 @@ on('__cfx_nui:park', (data, cb) => {
     let exec = async () => {
         let ped = PlayerPedId();
         let nearestVehicle = await getNearestVehicle(ped, config.nearestVehicleArea);
-        console.log(nearestVehicle);
         if (!nearestVehicle || !nearestVehicle.vehicle)
             return;
 
