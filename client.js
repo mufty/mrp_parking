@@ -133,6 +133,8 @@ on('mrp:parking:takeOut', (data) => {
 
             //apply modification and look
             MRP_CLIENT.setVehicleProperties(spawnedVehicle, vehicle);
+            //apply damage
+            emit('mrp:vehicle:applyVehicleDamage', spawnedVehicle, vehicle);
 
             buildMenu(currentlyAtBlip);
         };
