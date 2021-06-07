@@ -41,7 +41,7 @@ onNet('mrp:parking:getCarsAtLocation', (source, locationId, ownerId, uuid) => {
         }
     };
 
-    MRP_SERVER.find('vehicle', query, options, (result) => {
+    MRP_SERVER.find('vehicle', query, options, undefined, (result) => {
         emitNet('mrp:parking:getCarsAtLocation:response', source, result, uuid);
     });
 });
