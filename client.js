@@ -168,7 +168,7 @@ on('__cfx_nui:park', (data, cb) => {
 
     exec();
 
-    cb();
+    cb({});
 });
 
 RegisterNuiCallbackType('takeOut');
@@ -178,5 +178,5 @@ on('__cfx_nui:takeOut', (data, cb) => {
 
     emit("mrp:parking:takeOut", data);
 
-    cb();
+    cb({});
 });
