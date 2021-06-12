@@ -45,7 +45,7 @@ let buildMenu = (blip) => {
                 let displayName = GetDisplayNameFromVehicleModel(car.model);
                 displayName = GetLabelText(displayName);
                 submenu.push({
-                    id: car.plate,
+                    id: car.plate.replaceAll(" ", "_"), //replace spaces for underscore
                     text: displayName + " [" + car.plate + "]",
                     action: 'https://mrp_parking/takeOut'
                 });
@@ -175,6 +175,8 @@ RegisterNuiCallbackType('takeOut');
 on('__cfx_nui:takeOut', (data, cb) => {
     if (currentlyAtBlip == null)
         return;
+
+    data.id = data.id.replaceAll("_", " "); // replace underscores for spaces back
 
     emit("mrp:parking:takeOut", data);
 
