@@ -19,7 +19,7 @@ on('onResourceStart', (resource) => {
     }, {
         multi: true
     }, () => {
-        exports["mrp_core"].log('Vehicles impounded!');
+        console.log('Vehicles impounded!');
     });
 });
 
@@ -58,7 +58,7 @@ onNet('mrp:parking:takeoutVehicle', (source, plate, uuid) => {
         }, {
             plate: plate
         }, () => {
-            exports["mrp_core"].log('Vehicle updated!');
+            console.log('Vehicle updated!');
         });
         emitNet('mrp:parking:takeoutVehicle:response', source, vehicle, uuid);
     });
