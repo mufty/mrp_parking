@@ -157,7 +157,6 @@ on('__cfx_nui:park', (data, cb) => {
         console.log(`parking [${GetVehicleNumberPlateText(nearestVehicle.vehicle).trim()}]`);
 
         let vehicleProperties = MRP_CLIENT.getVehicleProperties(nearestVehicle.vehicle);
-        console.log(`parking livery = ${vehicleProperties.modLivery}`);
         let char = MRP_CLIENT.GetPlayerData();
         vehicleProperties.owner = char._id;
         vehicleProperties.location = currentlyAtBlip.id;
