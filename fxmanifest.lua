@@ -11,7 +11,7 @@ dependencies {
 }
 
 files {
-    'config/client.json',
+    'config/config.json',
 }
 
 client_scripts {

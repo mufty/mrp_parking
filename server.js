@@ -1,3 +1,5 @@
+const config = require('./config/config.json');
+
 MRP_SERVER = null;
 
 emit('mrp:getSharedObject', obj => MRP_SERVER = obj);
@@ -53,13 +55,15 @@ onNet('mrp:parking:takeoutVehicle', (source, plate, uuid) => {
     };
 
     MRP_SERVER.read('vehicle', query, (vehicle) => {
-        MRP_SERVER.update('vehicle', {
-            location: "OUT"
-        }, {
-            plate: plate
-        }, () => {
-            console.log('Vehicle updated!');
-        });
+        if (config.useOutLocationWhenTakingVehicle) {
+            MRP_SERVER.update('vehicle', {
+                location: "OUT"
+            }, {
+                plate: plate
+            }, () => {
+                console.log('Vehicle updated!');
+            });
+        }
         emitNet('mrp:parking:takeoutVehicle:response', source, vehicle, uuid);
     });
 });

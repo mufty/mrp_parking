@@ -56,6 +56,7 @@
         }
     },
     "nearestVehicleArea": 30,
+    "useOutLocationWhenTakingVehicle": false,
     "locale":{
         "park": "Park"
     }
